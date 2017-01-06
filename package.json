@@ -1,0 +1,41 @@
+{
+  "name": "reload-css",
+  "version": "1.0.0",
+  "description": "Reloads all style sheets in the page associated with a URL",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Matt DesLauriers",
+    "email": "dave.des@gmail.com",
+    "url": "https://github.com/mattdesl"
+  },
+  "dependencies": {
+    "query-string": "^4.2.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "reload",
+    "livereload",
+    "live",
+    "css",
+    "inject",
+    "css-reload",
+    "css-inject",
+    "lr",
+    "budo",
+    "development",
+    "dev",
+    "server"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Jam3/reload-css.git"
+  },
+  "homepage": "https://github.com/Jam3/reload-css",
+  "bugs": {
+    "url": "https://github.com/Jam3/reload-css/issues"
+  }
+}
