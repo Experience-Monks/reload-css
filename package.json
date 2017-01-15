@@ -1,6 +1,6 @@
 {
   "name": "reload-css",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Reloads all style sheets in the page associated with a URL",
   "main": "index.js",
   "license": "MIT",
