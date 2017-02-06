@@ -9,6 +9,19 @@ module.exports = function (url, opt) {
     localOnly = false;
   }
 
+  // determine base URL
+  var baseUrl = document.location.pathname;
+  var baseTag = document.querySelector('base');
+  if (baseTag) {
+    baseUrl = baseTag.getAttribute('href');
+    var parsedBase = URL.parse(baseUrl);
+    parsedBase.pathname = '/';
+    parsedBase.hash = null;
+    parsedBase.query = null;
+    parsedBase.search = null;
+    baseUrl = URL.format(parsedBase);
+  }
+
   // Find all <link> and <style> tags
   var nodes = [ 'link', 'style' ]
     .map(elements)
@@ -24,7 +37,7 @@ module.exports = function (url, opt) {
       };
       var href = el.getAttribute('href');
       if (el.tagName === 'LINK' && href) {
-        data.key = URL.key(href);
+        data.key = URL.key(href, baseUrl);
       }
       return data;
     });
@@ -32,11 +45,11 @@ module.exports = function (url, opt) {
   // Now gather all imports in those tags
   var imports = [];
   nodes.forEach(function (node) {
-    recursiveFindImports(node, node.element.sheet, imports);
+    recursiveFindImports(node, node.element.sheet, imports, baseUrl);
   });
 
   // Now try to update the matched URLs
-  var keyToMatch = url ? URL.key(url) : null;
+  var keyToMatch = url ? URL.key(url, baseUrl) : null;
   var matchImports = imports;
   if (keyToMatch) {
     // only match target imports
@@ -189,7 +202,7 @@ function getTopmostImport (imported) {
   return topmost;
 }
 
-function recursiveFindImports (node, styleSheet, result, lastImport) {
+function recursiveFindImports (node, styleSheet, result, baseUrl, lastImport) {
   if (!styleSheet) return;
   var rules;
   try {
@@ -206,7 +219,7 @@ function recursiveFindImports (node, styleSheet, result, lastImport) {
     if (rule.type === window.CSSRule.IMPORT_RULE) {
       var parentHref = rule.parentStyleSheet.href || document.location.href;
       var absoluteHref = URL.resolve(parentHref, rule.href);
-      var key = URL.key(absoluteHref);
+      var key = URL.key(absoluteHref, baseUrl);
 
       var newImport = {
         index: i,
@@ -216,7 +229,7 @@ function recursiveFindImports (node, styleSheet, result, lastImport) {
         href: rule.href
       };
       result.push(newImport);
-      recursiveFindImports(node, rule.styleSheet, result, newImport);
+      recursiveFindImports(node, rule.styleSheet, result, baseUrl, newImport);
     }
   }
 }
